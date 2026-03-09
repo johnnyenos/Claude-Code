@@ -21,9 +21,10 @@ USAGE
 # ============================================================
 # CONFIG  –  edit these values or override via env-vars
 # ============================================================
-SNS_TOPIC_ARN   = "arn:aws-us-gov:sns:us-gov-west-1:482227536604:AFC2S_secHub"  # SNS_TOPIC_ARN env-var overrides
-LOOKBACK_HOURS  = 24                                 # LOOKBACK_HOURS env-var overrides
-REGION          = "us-gov-west-1"                    # SECURITY_HUB_REGION env-var overrides
+SNS_TOPIC_ARN   = ""     # Set via SNS_TOPIC_ARN env-var (required)
+S3_BUCKET_NAME  = ""     # Set via S3_BUCKET_NAME env-var (optional, for report archival)
+LOOKBACK_HOURS  = 24     # LOOKBACK_HOURS env-var overrides
+REGION          = ""     # Set via SECURITY_HUB_REGION or AWS_REGION env-var
 DRY_RUN         = False                              # DRY_RUN env-var ("true"/"1") overrides
 # ============================================================
 
@@ -51,13 +52,15 @@ def _cfg():
             return False
         return default
 
-    topic_arn   = os.environ.get("SNS_TOPIC_ARN",         SNS_TOPIC_ARN or "").strip()
-    lookback    = int(os.environ.get("LOOKBACK_HOURS",    str(LOOKBACK_HOURS)))
-    region      = os.environ.get("SECURITY_HUB_REGION",  REGION or os.environ.get("AWS_REGION", "us-gov-west-1")).strip()
+    topic_arn   = os.environ.get("SNS_TOPIC_ARN",        SNS_TOPIC_ARN or "").strip()
+    bucket_name = os.environ.get("S3_BUCKET_NAME",       S3_BUCKET_NAME or "").strip()
+    lookback    = int(os.environ.get("LOOKBACK_HOURS",   str(LOOKBACK_HOURS)))
+    region      = os.environ.get("SECURITY_HUB_REGION",  REGION or os.environ.get("AWS_REGION", "")).strip()
     dry_run     = _env_bool("DRY_RUN", DRY_RUN)
 
     return dict(
         topic_arn=topic_arn if topic_arn else None,
+        bucket_name=bucket_name if bucket_name else None,
         lookback_hours=lookback,
         region=region,
         dry_run=dry_run,
