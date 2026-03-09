@@ -22,12 +22,12 @@ USAGE
 # ============================================================
 # CONFIG  –  edit these values or override via env-vars
 # ============================================================
-S3_BUCKET       = "REPLACE_ME"           # REPORT_BUCKET env-var overrides
-S3_PREFIX       = "securityhub-reports/" # REPORT_PREFIX env-var overrides
-SNS_TOPIC_ARN   = "REPLACE_ME"           # SNS_TOPIC_ARN env-var overrides; blank/None disables
-LOOKBACK_HOURS  = 24                     # LOOKBACK_HOURS env-var overrides
-REGION          = None                   # SECURITY_HUB_REGION env-var overrides; None → AWS_REGION
-DRY_RUN         = False                  # DRY_RUN env-var ("true"/"1") overrides
+S3_BUCKET       = "eodims-security-tf-test"           # REPORT_BUCKET env-var overrides
+S3_PREFIX       = "secHub/"                          # REPORT_PREFIX env-var overrides
+SNS_TOPIC_ARN   = "arn:aws-us-gov:sns:us-gov-west-1:482227536604:AFC2S_secHub"  # SNS_TOPIC_ARN env-var overrides
+LOOKBACK_HOURS  = 24                                 # LOOKBACK_HOURS env-var overrides
+REGION          = "us-gov-west-1"                    # SECURITY_HUB_REGION env-var overrides; None → AWS_REGION
+DRY_RUN         = False                              # DRY_RUN env-var ("true"/"1") overrides
 # ============================================================
 
 import csv
@@ -614,7 +614,7 @@ def _publish_sns(sns_client, topic_arn, subject, message, dry_run=False):
 # Lambda handler
 # ---------------------------------------------------------------------------
 
-def handler(event, context):
+def lambda_handler(event, context):
     # event is unused – scheduling is handled externally by EventBridge
     execution_id = getattr(context, "aws_request_id", str(uuid.uuid4()))
     start_time   = time.time()
