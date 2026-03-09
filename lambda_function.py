@@ -615,15 +615,11 @@ def _publish_sns(sns_client, topic_arn, subject, message, dry_run=False):
 # ---------------------------------------------------------------------------
 
 def handler(event, context):
+    # event is unused – scheduling is handled externally by EventBridge
     execution_id = getattr(context, "aws_request_id", str(uuid.uuid4()))
     start_time   = time.time()
 
-    print(json.dumps({
-        "level": "INFO",
-        "execution_id": execution_id,
-        "step": "start",
-        "event": event,
-    }))
+    print(json.dumps({"level": "INFO", "execution_id": execution_id, "step": "start"}))
 
     # ------------------------------------------------------------------
     # Resolve configuration
